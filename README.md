@@ -1,4 +1,4 @@
-Here’s a professional `README.md` file for your finalized Smart Weather Notifier project:
+
 
 ---
 
@@ -178,8 +178,7 @@ Contributions are welcome! Please follow these steps:
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## Contact
-For any inquiries, please reach out to [your.email@example.com](mailto:your.email@example.com).
+For any inquiries, please reach out to [jundiyusuf10@gmail.com](mailto:your.email@example.com).
 
 ---
 
-This `README.md` file provides a comprehensive overview of your Smart Weather Notifier project, detailing the features, installation instructions, usage, and more. You can customize it further to fit your specific project details, including updating paths for images, links, and any additional information you want to inclusmart weather notifier
