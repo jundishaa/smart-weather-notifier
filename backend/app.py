@@ -1,12 +1,11 @@
-
-m flask import Flask, request, jsonify
+from flask import Flask, request, jsonify
 from flask_cors import CORS
 import mysql.connector
 import requests
 import os
 from dotenv import load_dotenv  # Import dotenv
-from sendgrid import SendGridAPIClient
-from sendgrid.helpers.mail import Mail
+import sib_api_v3_sdk
+from sib_api_v3_sdk.rest import ApiException
 from twilio.rest import Client
 
 # Load environment variables from .env file
@@ -17,9 +16,7 @@ TWILIO_ACCOUNT_SID = os.getenv('TWILIO_ACCOUNT_SID')
 TWILIO_AUTH_TOKEN = os.getenv('TWILIO_AUTH_TOKEN')
 TWILIO_PHONE_NUMBER = os.getenv('TWILIO_PHONE_NUMBER')
 
-SENDGRID_API_KEY = os.getenv('SENDGRID_API_KEY')
-
-# OpenWeatherMap API Key
+BREVO_API_KEY = os.getenv('BREVO_API_KEY')
 OPENWEATHERMAP_API_KEY = os.getenv('OPENWEATHERMAP_API_KEY')
 
 app = Flask(__name__)
@@ -106,21 +103,24 @@ def get_weather():
         'condition': weather_data['weather'][0]['description']
     })
 
-# Function to send email via SendGrid
+# Function to send email via Brevo (Sendinblue)
 def send_email(to_email, subject, content):
-    message = Mail(
-        from_email='your_email@example.com',
-        to_emails=to_email,
+    configuration = sib_api_v3_sdk.Configuration()
+    configuration.api_key['api-key'] = BREVO_API_KEY
+
+    api_instance = sib_api_v3_sdk.TransactionalEmailsApi(sib_api_v3_sdk.ApiClient(configuration))
+    send_smtp_email = sib_api_v3_sdk.SendSmtpEmail(
+        to=[{'email': to_email}],
         subject=subject,
-        html_content=content)
+        html_content=content,
+        sender={'email': 'jundiyusuf10@gmail.com'}
+    )
+
     try:
-        sg = SendGridAPIClient(SENDGRID_API_KEY)
-        response = sg.send(message)
-        print(response.status_code)
-        print(response.body)
-        print(response.headers)
-    except Exception as e:
-        print(e.message)
+        response = api_instance.send_transac_email(send_smtp_email)
+        print(f"Email sent: {response}")
+    except ApiException as e:
+        print(f"Error sending email: {e}")
 
 # Function to send SMS via Twilio
 def send_sms(to_number, message_body):
