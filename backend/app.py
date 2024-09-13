@@ -3,9 +3,24 @@ m flask import Flask, request, jsonify
 from flask_cors import CORS
 import mysql.connector
 import requests
+import os
+from dotenv import load_dotenv  # Import dotenv
+from sendgrid import SendGridAPIClient
+from sendgrid.helpers.mail import Mail
+from twilio.rest import Client
+
+# Load environment variables from .env file
+load_dotenv()
+
+# Fetch sensitive credentials from environment variables
+TWILIO_ACCOUNT_SID = os.getenv('TWILIO_ACCOUNT_SID')
+TWILIO_AUTH_TOKEN = os.getenv('TWILIO_AUTH_TOKEN')
+TWILIO_PHONE_NUMBER = os.getenv('TWILIO_PHONE_NUMBER')
+
+SENDGRID_API_KEY = os.getenv('SENDGRID_API_KEY')
 
 # OpenWeatherMap API Key
-OPENWEATHERMAP_API_KEY = "92cffacb7424016e5cccbf19a528de7b"
+OPENWEATHERMAP_API_KEY = os.getenv('OPENWEATHERMAP_API_KEY')
 
 app = Flask(__name__)
 CORS(app)
@@ -52,11 +67,22 @@ def get_history(user_id):
 @app.route('/api/notifications', methods=['POST'])
 def subscribe_notifications():
     data = request.json
+    user_id = data['user_id']
+    location = data['location']
+    weather_condition = data['weather_condition']
+
+    # Fetch weather data
+    weather = get_weather(location)
+    if weather['condition'] == weather_condition:
+        # Send email notification
+        send_email(data['email'], 'Weather Alert', f"Alert: {weather_condition} expected in {location}.")
+
     cursor.execute("""
         INSERT INTO notifications (user_id, date_sent, weather_condition, delivery_status)
         VALUES (%s, NOW(), %s, 'Pending')
-    """, (data['user_id'], data['weather_condition']))
+    """, (user_id, weather_condition))
     db.commit()
+
     return jsonify({'status': 'Subscribed to notifications'})
 
 # Get current weather data from OpenWeatherMap API
@@ -79,6 +105,32 @@ def get_weather():
         'temperature': weather_data['main']['temp'],
         'condition': weather_data['weather'][0]['description']
     })
+
+# Function to send email via SendGrid
+def send_email(to_email, subject, content):
+    message = Mail(
+        from_email='your_email@example.com',
+        to_emails=to_email,
+        subject=subject,
+        html_content=content)
+    try:
+        sg = SendGridAPIClient(SENDGRID_API_KEY)
+        response = sg.send(message)
+        print(response.status_code)
+        print(response.body)
+        print(response.headers)
+    except Exception as e:
+        print(e.message)
+
+# Function to send SMS via Twilio
+def send_sms(to_number, message_body):
+    client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
+    message = client.messages.create(
+        body=message_body,
+        from_=TWILIO_PHONE_NUMBER,
+        to=to_number
+    )
+    print(message.sid)
 
 if __name__ == '__main__':
     app.run(debug=True)
