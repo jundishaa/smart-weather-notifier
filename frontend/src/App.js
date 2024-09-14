@@ -1,4 +1,4 @@
-mport React from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import { Route, Routes } from 'react-router-dom';
 import Dashboard from './pages/Dashboard';
