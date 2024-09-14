@@ -22,7 +22,7 @@ function App() {
                 <Route path="/settings" element={<Settings />} />
                 <Route path="/history" element={<NotificationHistory />} />
             </Routes>
-            <Weather />  {/* Assuming this is your weather display component */}
+            <Weather /> {/* Assuming this is your weather display component */}
         </div>
     );
 }
