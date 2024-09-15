@@ -1,4 +1,4 @@
-mport React, { useState } from 'react';
+import React, { useState } from 'react';
 
 const Weather = () => {
     const [location, setLocation] = useState('');
@@ -7,7 +7,9 @@ const Weather = () => {
 
     const fetchWeather = async () => {
         try {
-            const response = await fetch(`/api/weather?location=${location}`);
+            // Use the environment variable for the API URL
+            const apiUrl = process.env.REACT_APP_WEATHER_API_URL;
+            const response = await fetch(`${apiUrl}?location=${location}`);
             const data = await response.json();
             if (response.ok) {
                 setWeather(data);

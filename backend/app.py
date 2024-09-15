@@ -12,12 +12,12 @@ from twilio.rest import Client
 load_dotenv()
 
 # Fetch sensitive credentials from environment variables
-TWILIO_ACCOUNT_SID = os.getenv('TWILIO_ACCOUNT_SID')
-TWILIO_AUTH_TOKEN = os.getenv('TWILIO_AUTH_TOKEN')
-TWILIO_PHONE_NUMBER = os.getenv('TWILIO_PHONE_NUMBER')
+TWILIO_ACCOUNT_SID = os.getenv('FLASK_TWILIO_ACCOUNT_SID')
+TWILIO_AUTH_TOKEN = os.getenv('FLASK_TWILIO_AUTH_TOKEN')
+TWILIO_PHONE_NUMBER = os.getenv('FLASK_TWILIO_PHONE_NUMBER')
 
-BREVO_API_KEY = os.getenv('BREVO_API_KEY')
-OPENWEATHERMAP_API_KEY = os.getenv('OPENWEATHERMAP_API_KEY')
+BREVO_API_KEY = os.getenv('FLASK_BREVO_API_KEY')
+OPENWEATHERMAP_API_KEY = os.getenv('FLASK_OPENWEATHERMAP_API_KEY')
 
 app = Flask(__name__)
 CORS(app)
@@ -26,7 +26,7 @@ CORS(app)
 db = mysql.connector.connect(
     host="localhost",
     user="jundi",
-    password="jundi",
+    password="jundiyusuf",
     database="smart_weather_db"
 )
 cursor = db.cursor()
