@@ -5,6 +5,8 @@ import Dashboard from './pages/Dashboard';
 import Settings from './pages/Settings';
 import NotificationHistory from './pages/NotificationHistory';
 import Weather from './Weather';
+import RegistrationForm from './RegistrationForm';
+
 
 function App() {
 console.log('API URL:', process.env.REACT_APP_API_URL);

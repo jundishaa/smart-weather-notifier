@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import RegistrationForm from '../RegistrationForm';
 
 function Dashboard() {
 	  const [settings, setSettings] = useState(null);

@@ -25,15 +25,37 @@ CORS(app)
 # MySQL Database Connection
 db = mysql.connector.connect(
     host="localhost",
-    user="jundi",
-    password="jundiyusuf",
+    user="jundi",  
+    password="jundiyusuf",  
     database="smart_weather_db"
 )
 cursor = db.cursor()
 
+# Home route
 @app.route('/')
 def home():
     return "Welcome to the Smart Weather Notifier Backend"
+
+# Registration route
+@app.route('/register', methods=['POST'])
+def register_user():
+    data = request.get_json()
+    email = data.get('email')
+    phone = data.get('phone')
+
+    # Insert user data into the database
+    try:
+        cursor.execute("INSERT INTO users (email, phone) VALUES (%s, %s)", (email, phone))
+        db.commit()
+        
+        # Optional: Send welcome email and SMS
+        send_email(email, "Welcome to Smart Weather Notifier", "Thank you for registering!")
+        send_sms(phone, "Welcome to Smart Weather Notifier!")
+        
+        return jsonify({"message": "User registered successfully"}), 201
+    except Exception as e:
+        db.rollback()
+        return jsonify({"error": str(e)}), 500
 
 # Get user settings (preferences)
 @app.route('/api/settings/<int:user_id>', methods=['GET'])
@@ -85,7 +107,7 @@ def subscribe_notifications():
 # Get current weather data from OpenWeatherMap API
 @app.route('/api/weather', methods=['GET'])
 def get_weather():
-    location = request.args.get('location')  # Example: 'London'
+    location = request.args.get('location')
     if not location:
         return jsonify({'error': 'Location is required'}), 400
 
@@ -109,7 +131,7 @@ def send_email(to_email, subject, content):
     configuration.api_key['api-key'] = BREVO_API_KEY
 
     api_instance = sib_api_v3_sdk.TransactionalEmailsApi(sib_api_v3_sdk.ApiClient(configuration))
-    send_smtp_email = sib_api_v3_sdk.SendSmtpEmail(
+    send_smtp_email = sib_api_v3_sdk.SendSmtpEmail(    
         to=[{'email': to_email}],
         subject=subject,
         html_content=content,
