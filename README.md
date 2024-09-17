@@ -172,7 +172,7 @@ npm start
 
 ## 💬 Feedback
 
-I’m constantly looking to improve this project, so if you have any feedback or suggestions, feel free to open an issue or reach out to me at your.email@example.com.
+I’m constantly looking to improve this project, so if you have any feedback or suggestions, feel free to open an issue or reach out to me at jundiyusuf10@gmail.com.
 
 ---
 
