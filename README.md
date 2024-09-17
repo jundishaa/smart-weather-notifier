@@ -1,4 +1,3 @@
----
 # 🌦️ Smart Weather Notifier
 ## Table of Contents
 1. [Project Overview](#project-overview)
@@ -18,8 +17,6 @@
 **Smart Weather Notifier** is a web application designed to provide users with personalized weather notifications based on their preferences. Whether you're a commuter wanting a heads-up about rain or an event planner needing daily forecasts, this app has you covered. Through simple user inputs, the app fetches real-time weather data from the OpenWeatherMap API and sends customized alerts via Brevo email notifications when conditions like rain, snow, or temperature drops are expected. 
 
 This project was developed in a month as part of my portfolio to demonstrate my ability to build a full-stack application from scratch, integrating both front-end and back-end technologies, and using third-party APIs for real-world data.
-
----
 
 ## 🎯 Motivation
 
